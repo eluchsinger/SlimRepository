@@ -2,6 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Product>SlimRepository</Product>
+    <Company />
+    <Authors>Esteban Luchsinger</Authors>
+    <Version>0.1.0-beta</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Repository, Pattern, IRepository, EfCore, EntityFramework Core</PackageTags>
+    <RepositoryUrl>https://github.com/eluchsinger/SlimRepository</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/eluchsinger/SlimRepository</PackageProjectUrl>
+    <Copyright>2018</Copyright>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <Description>Provides simple interfaces for the Repository Pattern.</Description>
+    <PackageLicenseUrl>https://github.com/eluchsinger/SlimRepository/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
 </Project>
