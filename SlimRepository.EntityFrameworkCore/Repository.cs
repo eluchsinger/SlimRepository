@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.Interfaces;
 
-namespace SlimRepository.EfCore
+namespace SlimRepository.EntityFrameworkCore
 {
     public class Repository<T> : IRepository<T>, IAsyncRepository<T> where T : class
     {

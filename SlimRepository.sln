@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.Interfaces", "SlimRepository.Interfaces\SlimRepository.Interfaces.csproj", "{3371668B-05B0-41DC-BFC1-E1CCC5BBC852}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.EfCore", "SlimRepository.EfCore\SlimRepository.EfCore.csproj", "{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlimRepository.Interfaces", "SlimRepository.Interfaces\SlimRepository.Interfaces.csproj", "{3371668B-05B0-41DC-BFC1-E1CCC5BBC852}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F73D421-FFE5-484A-9E44-D244188FE949}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlimRepository.EntityFrameworkCore", "SlimRepository.EntityFrameworkCore\SlimRepository.EntityFrameworkCore.csproj", "{D77F1314-C474-41C0-B546-9026887CB3BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.EntityFramework", "SlimRepository.EntityFramework\SlimRepository.EntityFramework.csproj", "{94C6F702-A41A-455E-B83A-2E059FBC5A95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,17 +21,22 @@ Global
 		{3371668B-05B0-41DC-BFC1-E1CCC5BBC852}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3371668B-05B0-41DC-BFC1-E1CCC5BBC852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3371668B-05B0-41DC-BFC1-E1CCC5BBC852}.Release|Any CPU.Build.0 = Release|Any CPU
-		{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D77F1314-C474-41C0-B546-9026887CB3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D77F1314-C474-41C0-B546-9026887CB3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D77F1314-C474-41C0-B546-9026887CB3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D77F1314-C474-41C0-B546-9026887CB3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94C6F702-A41A-455E-B83A-2E059FBC5A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C6F702-A41A-455E-B83A-2E059FBC5A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C6F702-A41A-455E-B83A-2E059FBC5A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C6F702-A41A-455E-B83A-2E059FBC5A95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3371668B-05B0-41DC-BFC1-E1CCC5BBC852} = {8F73D421-FFE5-484A-9E44-D244188FE949}
-		{330FA82F-2FE5-4351-AA9F-1AECB4AD7C68} = {8F73D421-FFE5-484A-9E44-D244188FE949}
+		{D77F1314-C474-41C0-B546-9026887CB3BF} = {8F73D421-FFE5-484A-9E44-D244188FE949}
+		{94C6F702-A41A-455E-B83A-2E059FBC5A95} = {8F73D421-FFE5-484A-9E44-D244188FE949}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AC49C20-D775-4167-AFE8-92CA1788AD06}
