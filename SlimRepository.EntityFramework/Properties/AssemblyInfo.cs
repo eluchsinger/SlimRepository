@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("SlimRepository.EntityFramework")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Provides a simple generic implementation of the Repository Pattern for Entity Framework 6.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Esteban Luchsinger")]
 [assembly: AssemblyProduct("SlimRepository")]
