@@ -1,4 +1,4 @@
-using System.Xml.Linq;
+using System.Collections.Generic;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
@@ -36,7 +36,6 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
         public class Delete
         {
-
             [Fact]
             [Trait("Category", "Delete")]
             public void GivenRemovingEntityNotInStore_ItShouldThrow()
@@ -79,7 +78,6 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
         public class GetById
         {
-
             [Fact]
             [Trait("Category", "GetById")]
             public void GivenDatabaseHasObjects_ItShouldReturnOneById()
@@ -118,7 +116,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 foundObject.Should().BeNull();
             }
         }
-        
+
         public class Edit
         {
             [Fact]
@@ -134,7 +132,6 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 using (var context = new TestContext(options))
                 {
                     var repository = new Repository<TestObject>(context);
-
                     changedObject.Name = "EditedObject";
                     repository.Edit(changedObject);
                 }
@@ -144,6 +141,63 @@ namespace SlimRepository.EntityFrameworkCore.Test
                     var foundObject = context.Find<TestObject>(changedObject.Id);
                     foundObject.Should().BeEquivalentTo(changedObject);
                 }
+            }
+        }
+
+        public class List
+        {
+            [Fact]
+            [Trait("Category", "List")]
+            public void GivenDatabaseIsEmpty_ItShouldReturnEmptyList()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    repository.List().Should().BeEmpty();
+                }
+            }
+
+            [Fact]
+            [Trait("Category", "List")]
+            public void GivenDatabaseContainsObjects_ItShouldReturnAllObjects()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    returnedList = repository.List();
+                }
+
+                returnedList.Should().BeEquivalentTo(seedData);
+            }
+
+            [Fact]
+            [Trait("Category", "List")]
+            public void GivenDatabaseContainsObjects_ItShouldReturnOnlyObjectsWithAThreeInTheName()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                options.EnsureSeeded();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    returnedList = repository.List(o => o.Name.Contains("3"));
+                }
+
+                returnedList.Should()
+                    .OnlyContain(o => o.Name.Contains("3"));
             }
         }
     }
