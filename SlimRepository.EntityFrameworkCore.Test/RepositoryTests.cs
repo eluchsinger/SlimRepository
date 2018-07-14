@@ -32,6 +32,30 @@ namespace SlimRepository.EntityFrameworkCore.Test
                     returnedObject.Should().BeEquivalentTo(addedObject);
                 }
             }
+
+            [Fact]
+            [Trait("Category", "Add")]
+            public void GivenDatabaseContainsSameObject_ItShouldReplaceTheObject()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var addedEntity = new TestObject(id: 1, name:"TestObject");
+                TestObject actualEntity;
+                using (var context = new TestContext(options))
+                {
+                    context.Add(addedEntity);
+                }
+
+                using (var context = new TestContext(options))
+                {
+                    var newEntity = new TestObject(id: 1, name:"NewTestObject");
+                    var repository = new Repository<TestObject>(context);
+                    actualEntity = repository.Add(newEntity);
+                }
+
+                actualEntity.Should().BeEquivalentTo(new TestObject(1, "NewTestObject"));
+            }
         }
 
         public class Delete
@@ -55,7 +79,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
             [Fact]
             [Trait("Category", "Delete")]
-            public void GivenDatabaseHasObjects_ItShouldRemoveFirstObject()
+            public void GivenDeleteZero_ItShouldRemoveFirstObject()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
