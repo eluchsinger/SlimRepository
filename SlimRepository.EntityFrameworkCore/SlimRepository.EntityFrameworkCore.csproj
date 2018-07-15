@@ -7,13 +7,14 @@
     <PackageProjectUrl>https://github.com/eluchsinger/SlimRepository</PackageProjectUrl>
     <Product>SlimRepository</Product>
     <Authors>Esteban Luchsinger</Authors>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageReleaseNotes>Renamed the package from SlimRepository.EfCore (Version 0.1.0)</PackageReleaseNotes>
     <Description>Provides a simple generic implementation of the Repository Pattern for Entity Framework Core.</Description>
     <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/eluchsinger/SlimRepository/blob/master/LICENSE</PackageLicenseUrl>
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,6 +11,7 @@ namespace SlimRepository.Interfaces
         List<T> List(ISpecification<T> specification);
         List<T> List(Expression<Func<T, bool>> predicate);
         T Add(T entity);
+        void AddRange(IEnumerable<T> entities);
         void Delete(T entity);
         void Edit(T entity);
     }

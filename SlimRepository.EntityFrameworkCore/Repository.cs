@@ -29,7 +29,7 @@ namespace SlimRepository.EntityFrameworkCore
             return Context.Set<T>().ToList();
         }
 
-        public List<T> List(ISpecification<T> specification)
+        public virtual List<T> List(ISpecification<T> specification)
         {
             var queryableResultWithIncludes = specification.Includes
                 .Aggregate(Context.Set<T>().AsQueryable(),
@@ -56,6 +56,12 @@ namespace SlimRepository.EntityFrameworkCore
             Context.Set<T>().Add(entity);
             Context.SaveChanges();
             return entity;
+        }
+
+        public virtual void AddRange(IEnumerable<T> entities)
+        {
+            Context.Set<T>().AddRange(entities);
+            Context.SaveChanges();
         }
 
         public virtual void Delete(T entity)
@@ -111,6 +117,12 @@ namespace SlimRepository.EntityFrameworkCore
             await Context.Set<T>().AddAsync(entity);
             await Context.SaveChangesAsync();
             return entity;
+        }
+
+        public virtual Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            return Context.Set<T>().AddRangeAsync(entities)
+                .ContinueWith(addTask => Context.SaveChangesAsync());
         }
 
         public virtual Task EditAsync(T entity)
