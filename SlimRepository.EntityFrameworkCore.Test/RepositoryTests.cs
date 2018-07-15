@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
