@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
@@ -6,13 +8,13 @@ using Xunit;
 
 namespace SlimRepository.EntityFrameworkCore.Test
 {
-    public partial class RepositoryTests
+    public class RepositoryTests
     {
         public class Add
         {
             [Fact]
             [Trait("Category", "Add")]
-            public void GivenDatabaseIsEmpty_ItShouldAddAnObject()
+            public void GivenDatabaseDoesNotContainObject_ItShouldAddAnObject()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
@@ -55,6 +57,41 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 }
 
                 actualEntity.Should().BeEquivalentTo(new TestObject(1, "NewTestObject"));
+            }
+        }
+
+        public class AddRange
+        {
+            [Fact]
+            [Trait("Category", "AddRange")]
+            public void GivenObjectsNotInDatabase_AddRangeOfObjects()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var objectsToAdd = new []
+                {
+                    new TestObject(name: "Test1"),
+                    new TestObject(name: "Test2"),
+                    new TestObject(name: "Test3"),
+                    new TestObject(name: "Test4")
+                };
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    repository.AddRange(objectsToAdd);
+                }
+
+                using (var context = new TestContext(options))
+                {
+                    var addedObjectNames = objectsToAdd.Select(o => o.Name);
+                    context.TestObjects
+                        .Select(testObject => testObject.Name)
+                        .All(name => addedObjectNames.Contains(name))
+                        .Should()
+                        .BeTrue();
+                }
             }
         }
 

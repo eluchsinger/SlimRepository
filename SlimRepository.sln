@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.EntityFramew
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{48C77CE2-4F4B-43CF-B6C1-8D970886378C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.EntityFrameworkCore.Test", "SlimRepository.EntityFrameworkCore.Test\SlimRepository.EntityFrameworkCore.Test.csproj", "{FA03F12A-4A01-4441-B815-75C74D475F24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlimRepository.EntityFrameworkCore.Test", "SlimRepository.EntityFrameworkCore.Test\SlimRepository.EntityFrameworkCore.Test.csproj", "{FA03F12A-4A01-4441-B815-75C74D475F24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
