@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
+using SlimRepository.Interfaces;
 using Xunit;
 
 namespace SlimRepository.EntityFrameworkCore.Test
@@ -258,6 +259,25 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 returnedList.Should()
                     .OnlyContain(o => o.Name.Contains("3"));
+            }
+
+            [Fact]
+            [Trait("Category", "List")]
+            public void GivenDatabaseContainsObjects_ItShouldReturnAllBySpecification()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    returnedList = repository.List(new EmptySpecification<TestObject>(o => true));
+                }
+
+                returnedList.Should().BeEquivalentTo(seedData);
             }
         }
     }
