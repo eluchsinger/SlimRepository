@@ -1,18 +1,17 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SlimRepository.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SlimRepository.Interfaces;
 
 namespace SlimRepository.EntityFrameworkCore
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class UntrackedRepository<T> : IUntrackedRepository<T> where T : class
     {
         protected readonly DbContext Context;
 
-        public Repository(DbContext context)
+        public UntrackedRepository(DbContext context)
         {
             Context = context;
         }
@@ -24,7 +23,9 @@ namespace SlimRepository.EntityFrameworkCore
 
         public virtual List<T> List()
         {
-            return Context.Set<T>().ToList();
+            return Context.Set<T>()
+                .AsNoTracking()
+                .ToList();
         }
 
         public virtual List<T> List(ISpecification<T> specification)
@@ -39,6 +40,7 @@ namespace SlimRepository.EntityFrameworkCore
 
             return secondaryResult
                 .Where(specification.Criteria)
+                .AsNoTracking()
                 .ToList();
         }
 
@@ -46,6 +48,7 @@ namespace SlimRepository.EntityFrameworkCore
         {
             return Context.Set<T>()
                 .Where(predicate)
+                .AsNoTracking()
                 .ToList();
         }
 
