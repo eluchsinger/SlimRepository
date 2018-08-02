@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SlimRepository.EntityFrameworkCore.Test
@@ -22,7 +22,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     addedObject = await repository.AddAsync(new TestObject { Name = "Test" });
                 }
 
@@ -51,7 +51,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 using (var context = new TestContext(options))
                 {
                     var newEntity = new TestObject(id: 1, name: "NewTestObject");
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     actualEntity = await repository.AddAsync(newEntity);
                 }
 
@@ -78,7 +78,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     await repository.AddRangeAsync(objectsToAdd);
                 }
 
@@ -106,7 +106,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     repository.DeleteAsync(new TestObject())
                         .GetAwaiter()
                         .Invoking(awaiter => awaiter.GetResult())
@@ -126,7 +126,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     await repository.DeleteAsync(seedData[0]);
                 }
 
@@ -153,7 +153,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     foundObject = await repository.GetByIdAsync(expectedObject.Id);
                 }
 
@@ -171,7 +171,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     foundObject = await repository.GetByIdAsync(0);
                 }
 
@@ -193,7 +193,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     changedObject.Name = "EditedObject";
                     await repository.EditAsync(changedObject);
                 }
@@ -218,7 +218,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     (await repository.ListAsync()).Should().BeEmpty();
                 }
             }
@@ -235,7 +235,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync();
                 }
 
@@ -254,7 +254,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync(o => o.Name.Contains("3"));
                 }
 
@@ -274,7 +274,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync(new EmptySpecification<TestObject>(o => true));
                 }
 
