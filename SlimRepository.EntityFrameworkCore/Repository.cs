@@ -24,10 +24,12 @@ namespace SlimRepository.EntityFrameworkCore
         public virtual List<T> List(bool asNoTracking = false)
         {
             var query = Context.Set<T>().AsQueryable();
+
             if (asNoTracking)
             {
                 query = query.AsNoTracking();
             }
+
             return query.ToList();
         }
 

@@ -27,7 +27,7 @@ namespace SlimRepository.EntityFramework
 
             if (asNoTracking)
             {
-                query.AsNoTracking();
+                query = query.AsNoTracking();
             }
 
             return query.ToList();
@@ -45,7 +45,7 @@ namespace SlimRepository.EntityFramework
 
             if (asNoTracking)
             {
-                secondaryResult.AsNoTracking();
+                secondaryResult = secondaryResult.AsNoTracking();
             }
 
             return secondaryResult
@@ -59,7 +59,7 @@ namespace SlimRepository.EntityFramework
 
             if (asNoTracking)
             {
-                query.AsNoTracking();
+                query = query.AsNoTracking();
             }
 
             return query
