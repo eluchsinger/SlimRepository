@@ -51,7 +51,6 @@
     <Compile Include="AsyncRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository.cs" />
-    <Compile Include="UntrackedRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SlimRepository.Interfaces\SlimRepository.Interfaces.csproj">
