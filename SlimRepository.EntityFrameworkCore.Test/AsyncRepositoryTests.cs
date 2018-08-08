@@ -263,7 +263,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
             }
 
             [Fact]
-            [Trait("Category", "List")]
+            [Trait("Category", "ListAsync")]
             public async void GivenDatabaseContainsObjects_ItShouldReturnAllBySpecificationAsync()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
@@ -280,6 +280,62 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 returnedList.Should().BeEquivalentTo(seedData);
             }
+
+            [Fact]
+            [Trait("Category", "ListAsync")]
+            public async void GivenObjectIsNotSaved_ItShouldNotGetSavedByOtherSaves()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var seedObject = seedData.First();
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    var list = await repository.ListAsync(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name = "ChangedName";
+                    var otherList = await repository.ListAsync(o => !o.Id.Equals(seedObject.Id));
+                    await repository.EditAsync(otherList.First()); // Potentially saves all tracked objects
+                }
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    var list = await repository.ListAsync(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name.Should().NotBe("ChangedName");
+                }
+            }
+
+            //[Fact]
+            //[Trait("Category", "ListAsync")]
+            //public async void GivenParameterUntrackedTrue_ItShouldNotTrackChangesToTheEntities()
+            //{
+            //    var options = new DbContextOptionsBuilder<TestContext>()
+            //        .UseInMemoryDatabase(Helper.GetCallerName())
+            //        .Options;
+            //    var seedData = options.EnsureSeeded();
+
+            //    using (var context = new TestContext(options))
+            //    {
+            //        var repository = new AsyncRepository<TestObject>(context);
+            //        var list = await repository.ListAsync(o => o.Id.Equals(seedData.First().Id));
+            //        var firstElement = list.First();
+            //        firstElement.Name = "ChangedName";
+            //        await repository.EditAsync(firstElement);
+            //    }
+
+            //    using (var context = new TestContext(options))
+            //    {
+            //        var repository = new AsyncRepository<TestObject>(context);
+            //        var list = await repository.ListAsync(o => o.Id.Equals(seedData.First().Id));
+            //        var firstElement = list.First();
+            //        firstElement.Name.Should().Be("ChangedName");
+            //    }
+            //}
         }
     }
 }

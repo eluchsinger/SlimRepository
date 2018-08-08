@@ -12,11 +12,11 @@ namespace SlimRepository.Interfaces
     {
         T GetById(int id);
 
-        List<T> List(bool asNoTracking = false);
+        List<T> List();
 
-        List<T> List(ISpecification<T> specification, bool asNoTracking = false);
+        List<T> List(ISpecification<T> specification);
 
-        List<T> List(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
+        List<T> List(Expression<Func<T, bool>> predicate);
 
         T Add(T entity);
 

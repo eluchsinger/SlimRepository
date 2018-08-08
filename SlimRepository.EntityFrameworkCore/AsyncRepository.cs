@@ -22,19 +22,14 @@ namespace SlimRepository.EntityFrameworkCore
             return Context.Set<T>().FindAsync(id);
         }
 
-        public virtual Task<List<T>> ListAsync(bool asNoTracking = false)
+        public virtual Task<List<T>> ListAsync()
         {
-            var query = Context.Set<T>().AsQueryable();
-
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return query.ToListAsync();
+            return Context.Set<T>()
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public virtual Task<List<T>> ListAsync(ISpecification<T> specification, bool asNoTracking = false)
+        public virtual Task<List<T>> ListAsync(ISpecification<T> specification)
         {
             var queryableResultWithIncludes = specification.Includes
                 .Aggregate(Context.Set<T>().AsQueryable(),
@@ -44,26 +39,17 @@ namespace SlimRepository.EntityFrameworkCore
                 .Aggregate(queryableResultWithIncludes,
                     (current, include) => current.Include(include));
 
-            if (asNoTracking)
-            {
-                secondaryResult = secondaryResult.AsNoTracking();
-            }
-
             return secondaryResult
+                .AsNoTracking()
                 .Where(specification.Criteria)
                 .ToListAsync();
         }
 
-        public virtual Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
+        public virtual Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
         {
-            var query = Context.Set<T>().AsQueryable();
-
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return query.Where(predicate)
+            return Context.Set<T>()
+                .AsNoTracking()
+                .Where(predicate)
                 .ToListAsync();
         }
 

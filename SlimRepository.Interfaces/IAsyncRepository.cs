@@ -13,11 +13,11 @@ namespace SlimRepository.Interfaces
     {
         Task<T> GetByIdAsync(int id);
 
-        Task<List<T>> ListAsync(bool asNoTracking = false);
+        Task<List<T>> ListAsync();
 
-        Task<List<T>> ListAsync(ISpecification<T> specification, bool asNoTracking = false);
+        Task<List<T>> ListAsync(ISpecification<T> specification);
 
-        Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate, bool asNoTracking = false);
+        Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate);
 
         Task<T> AddAsync(T entity);
 

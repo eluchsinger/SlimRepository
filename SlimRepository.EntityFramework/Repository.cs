@@ -21,19 +21,14 @@ namespace SlimRepository.EntityFramework
             return Context.Set<T>().Find(id);
         }
 
-        public virtual List<T> List(bool asNoTracking = false)
+        public virtual List<T> List()
         {
-            var query = Context.Set<T>().AsQueryable();
-
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            return query.ToList();
+            return Context.Set<T>()
+                .AsNoTracking()
+                .ToList();
         }
 
-        public virtual List<T> List(ISpecification<T> specification, bool asNoTracking = false)
+        public virtual List<T> List(ISpecification<T> specification)
         {
             var queryableResultWithIncludes = specification.Includes
                 .Aggregate(Context.Set<T>().AsQueryable(),
@@ -43,26 +38,18 @@ namespace SlimRepository.EntityFramework
                 .Aggregate(queryableResultWithIncludes,
                     (current, include) => current.Include(include));
 
-            if (asNoTracking)
-            {
-                secondaryResult = secondaryResult.AsNoTracking();
-            }
-
             return secondaryResult
+                .AsNoTracking()
                 .Where(specification.Criteria)
                 .ToList();
         }
 
-        public virtual List<T> List(Expression<Func<T, bool>> predicate, bool asNoTracking = false)
+        public virtual List<T> List(Expression<Func<T, bool>> predicate)
         {
             var query = Context.Set<T>().AsQueryable();
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
             return query
+                .AsNoTracking()
                 .Where(predicate)
                 .ToList();
         }
