@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{48C77CE2-4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlimRepository.EntityFrameworkCore.Test", "SlimRepository.EntityFrameworkCore.Test\SlimRepository.EntityFrameworkCore.Test.csproj", "{FA03F12A-4A01-4441-B815-75C74D475F24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimRepository.EntityFramework.Test", "SlimRepository.EntityFramework.Test\SlimRepository.EntityFramework.Test.csproj", "{DC44E451-5B7E-4752-93EB-B8DDCA9EC980}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{FA03F12A-4A01-4441-B815-75C74D475F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA03F12A-4A01-4441-B815-75C74D475F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA03F12A-4A01-4441-B815-75C74D475F24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC44E451-5B7E-4752-93EB-B8DDCA9EC980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC44E451-5B7E-4752-93EB-B8DDCA9EC980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC44E451-5B7E-4752-93EB-B8DDCA9EC980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC44E451-5B7E-4752-93EB-B8DDCA9EC980}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{D77F1314-C474-41C0-B546-9026887CB3BF} = {8F73D421-FFE5-484A-9E44-D244188FE949}
 		{94C6F702-A41A-455E-B83A-2E059FBC5A95} = {8F73D421-FFE5-484A-9E44-D244188FE949}
 		{FA03F12A-4A01-4441-B815-75C74D475F24} = {48C77CE2-4F4B-43CF-B6C1-8D970886378C}
+		{DC44E451-5B7E-4752-93EB-B8DDCA9EC980} = {48C77CE2-4F4B-43CF-B6C1-8D970886378C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AC49C20-D775-4167-AFE8-92CA1788AD06}

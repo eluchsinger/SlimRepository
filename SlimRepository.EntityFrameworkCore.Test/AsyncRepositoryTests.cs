@@ -261,6 +261,29 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 returnedList.Should()
                     .OnlyContain(o => o.Name.Contains("3"));
             }
+            
+            [Fact]
+            [Trait("Category", "ListAsync")]
+            public async void GivenListByMultipleCriteria_ItShouldReturnObjectsMeetingCriteria()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var searchingObject = seedData.First();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    returnedList = await repository.ListAsync(o =>
+                        o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+
+                }
+
+                returnedList.Should()
+                    .ContainSingle(o => o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+            }
 
             [Fact]
             [Trait("Category", "ListAsync")]
