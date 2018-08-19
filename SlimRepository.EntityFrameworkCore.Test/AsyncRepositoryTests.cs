@@ -261,10 +261,10 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 returnedList.Should()
                     .OnlyContain(o => o.Name.Contains("3"));
             }
-            
+
             [Fact]
             [Trait("Category", "ListAsync")]
-            public async void GivenListByMultipleCriteria_ItShouldReturnObjectsMeetingCriteria()
+            public async void GivenListByMultipleCriteria_ItShouldReturnObjectsMeetingCriteriaAsync()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
@@ -278,7 +278,6 @@ namespace SlimRepository.EntityFrameworkCore.Test
                     var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync(o =>
                         o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
-
                 }
 
                 returnedList.Should()
@@ -306,7 +305,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
             [Fact]
             [Trait("Category", "ListAsync")]
-            public async void GivenObjectIsNotSaved_ItShouldNotGetSavedByOtherSaves()
+            public async void GivenObjectIsNotSaved_ItShouldNotGetSavedByOtherSavesAsync()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
@@ -321,7 +320,8 @@ namespace SlimRepository.EntityFrameworkCore.Test
                     var testObject = list.First();
                     testObject.Name = "ChangedName";
                     var otherList = await repository.ListAsync(o => !o.Id.Equals(seedObject.Id));
-                    await repository.EditAsync(otherList.First()); // Potentially saves all tracked objects
+                    // Potentially saves all tracked objects
+                    await repository.EditAsync(otherList.First());
                 }
 
                 using (var context = new TestContext(options))
@@ -332,33 +332,6 @@ namespace SlimRepository.EntityFrameworkCore.Test
                     testObject.Name.Should().NotBe("ChangedName");
                 }
             }
-
-            //[Fact]
-            //[Trait("Category", "ListAsync")]
-            //public async void GivenParameterUntrackedTrue_ItShouldNotTrackChangesToTheEntities()
-            //{
-            //    var options = new DbContextOptionsBuilder<TestContext>()
-            //        .UseInMemoryDatabase(Helper.GetCallerName())
-            //        .Options;
-            //    var seedData = options.EnsureSeeded();
-
-            //    using (var context = new TestContext(options))
-            //    {
-            //        var repository = new AsyncRepository<TestObject>(context);
-            //        var list = await repository.ListAsync(o => o.Id.Equals(seedData.First().Id));
-            //        var firstElement = list.First();
-            //        firstElement.Name = "ChangedName";
-            //        await repository.EditAsync(firstElement);
-            //    }
-
-            //    using (var context = new TestContext(options))
-            //    {
-            //        var repository = new AsyncRepository<TestObject>(context);
-            //        var list = await repository.ListAsync(o => o.Id.Equals(seedData.First().Id));
-            //        var firstElement = list.First();
-            //        firstElement.Name.Should().Be("ChangedName");
-            //    }
-            //}
         }
     }
 }
