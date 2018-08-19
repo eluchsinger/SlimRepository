@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/eluchsinger/SlimRepository</RepositoryUrl>
     <PackageProjectUrl>https://github.com/eluchsinger/SlimRepository</PackageProjectUrl>
     <Copyright>2018</Copyright>
-    <PackageReleaseNotes>Added an Interface for "untracked" repositories.</PackageReleaseNotes>
+    <PackageReleaseNotes></PackageReleaseNotes>
     <Description>Provides simple interfaces for the Repository Pattern.</Description>
     <PackageLicenseUrl>https://github.com/eluchsinger/SlimRepository/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>

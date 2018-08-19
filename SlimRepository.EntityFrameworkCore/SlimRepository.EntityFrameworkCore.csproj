@@ -10,7 +10,7 @@
     <Version>0.4.0</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Added a repository to retrieve data untracked (should deliver a performance boost).</PackageReleaseNotes>
+    <PackageReleaseNotes>AsyncRepository does not inherit from Repository anymore. List() now retrieves untracked entities.</PackageReleaseNotes>
     <Description>Provides a simple generic implementation of the Repository Pattern for Entity Framework Core.</Description>
     <Copyright>2018</Copyright>
     <PackageLicenseUrl>https://github.com/eluchsinger/SlimRepository/blob/master/LICENSE</PackageLicenseUrl>
