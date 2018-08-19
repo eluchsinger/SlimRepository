@@ -24,7 +24,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 using (var context = new TestContext(options))
                 {
                     var repository = new Repository<TestObject>(context);
-                    addedObject = repository.Add(new TestObject {Name = "Test"});
+                    addedObject = repository.Add(new TestObject { Name = "Test" });
                 }
 
                 using (var context = new TestContext(options))
@@ -42,7 +42,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
                     .Options;
-                var addedEntity = new TestObject(id: 1, name:"TestObject");
+                var addedEntity = new TestObject(id: 1, name: "TestObject");
                 TestObject actualEntity;
                 using (var context = new TestContext(options))
                 {
@@ -51,7 +51,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var newEntity = new TestObject(id: 1, name:"NewTestObject");
+                    var newEntity = new TestObject(id: 1, name: "NewTestObject");
                     var repository = new Repository<TestObject>(context);
                     actualEntity = repository.Add(newEntity);
                 }
@@ -69,7 +69,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 var options = new DbContextOptionsBuilder<TestContext>()
                     .UseInMemoryDatabase(Helper.GetCallerName())
                     .Options;
-                var objectsToAdd = new []
+                var objectsToAdd = new[]
                 {
                     new TestObject(name: "Test1"),
                     new TestObject(name: "Test2"),
@@ -263,6 +263,28 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
             [Fact]
             [Trait("Category", "List")]
+            public void GivenListByMultipleCriteria_ItShouldReturnObjectsMeetingCriteria()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var searchingObject = seedData.First();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    returnedList = repository.List(o =>
+                        o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+                }
+
+                returnedList.Should()
+                    .ContainSingle(o => o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+            }
+
+            [Fact]
+            [Trait("Category", "List")]
             public void GivenDatabaseContainsObjects_ItShouldReturnAllBySpecification()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
@@ -278,6 +300,36 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 }
 
                 returnedList.Should().BeEquivalentTo(seedData);
+            }
+
+            [Fact]
+            [Trait("Category", "List")]
+            public void GivenObjectIsNotSaved_ItShouldNotGetSavedByOtherSaves()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var seedObject = seedData.First();
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    var list = repository.List(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name = "ChangedName";
+                    var otherList = repository.List(o => !o.Id.Equals(seedObject.Id));
+                    // Potentially saves all tracked objects
+                    repository.Edit(otherList.First());
+                }
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new Repository<TestObject>(context);
+                    var list = repository.List(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name.Should().NotBe("ChangedName");
+                }
             }
         }
     }

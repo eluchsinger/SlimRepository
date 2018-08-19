@@ -1,34 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using SlimRepository.Interfaces;
 
-namespace SlimRepository.EntityFrameworkCore
+namespace SlimRepository.EntityFramework
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class AsyncRepository<T> : IAsyncRepository<T> where T : class
     {
         protected readonly DbContext Context;
 
-        public Repository(DbContext context)
+        public AsyncRepository(DbContext context)
         {
             Context = context;
         }
 
-        public virtual T GetById(int id)
+        public virtual Task<T> GetByIdAsync(int id)
         {
-            return Context.Set<T>().Find(id);
+            return Context.Set<T>().FindAsync(id);
         }
 
-        public virtual List<T> List()
+        public virtual Task<List<T>> ListAsync()
         {
             return Context.Set<T>()
                 .AsNoTracking()
-                .ToList();
+                .ToListAsync();
         }
 
-        public virtual List<T> List(ISpecification<T> specification)
+        public virtual Task<List<T>> ListAsync(ISpecification<T> specification)
         {
             var queryableResultWithIncludes = specification.Includes
                 .Aggregate(Context.Set<T>().AsQueryable(),
@@ -41,40 +42,40 @@ namespace SlimRepository.EntityFrameworkCore
             return secondaryResult
                 .AsNoTracking()
                 .Where(specification.Criteria)
-                .ToList();
+                .ToListAsync();
         }
 
-        public virtual List<T> List(Expression<Func<T, bool>> predicate)
+        public virtual Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
         {
             return Context.Set<T>()
                 .AsNoTracking()
                 .Where(predicate)
-                .ToList();
+                .ToListAsync();
         }
 
-        public virtual T Add(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             Context.Set<T>().Add(entity);
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
             return entity;
         }
 
-        public virtual void AddRange(IEnumerable<T> entities)
+        public virtual async Task AddRangeAsync(IEnumerable<T> entities)
         {
             Context.Set<T>().AddRange(entities);
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
-        public virtual void Delete(T entity)
-        {
-            Context.Set<T>().Remove(entity);
-            Context.SaveChanges();
-        }
-
-        public virtual void Edit(T entity)
+        public virtual Task EditAsync(T entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
-            Context.SaveChanges();
+            return Context.SaveChangesAsync();
+        }
+
+        public virtual Task DeleteAsync(T entity)
+        {
+            Context.Set<T>().Remove(entity);
+            return Context.SaveChangesAsync();
         }
     }
 }

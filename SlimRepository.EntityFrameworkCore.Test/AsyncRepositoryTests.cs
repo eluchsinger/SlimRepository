@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using SlimRepository.EntityFrameworkCore.Test.Data;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SlimRepository.EntityFrameworkCore.Test
@@ -22,7 +22,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     addedObject = await repository.AddAsync(new TestObject { Name = "Test" });
                 }
 
@@ -51,7 +51,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
                 using (var context = new TestContext(options))
                 {
                     var newEntity = new TestObject(id: 1, name: "NewTestObject");
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     actualEntity = await repository.AddAsync(newEntity);
                 }
 
@@ -78,7 +78,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     await repository.AddRangeAsync(objectsToAdd);
                 }
 
@@ -106,7 +106,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     repository.DeleteAsync(new TestObject())
                         .GetAwaiter()
                         .Invoking(awaiter => awaiter.GetResult())
@@ -126,7 +126,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     await repository.DeleteAsync(seedData[0]);
                 }
 
@@ -153,7 +153,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     foundObject = await repository.GetByIdAsync(expectedObject.Id);
                 }
 
@@ -171,7 +171,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     foundObject = await repository.GetByIdAsync(0);
                 }
 
@@ -193,7 +193,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     changedObject.Name = "EditedObject";
                     await repository.EditAsync(changedObject);
                 }
@@ -218,7 +218,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     (await repository.ListAsync()).Should().BeEmpty();
                 }
             }
@@ -235,7 +235,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync();
                 }
 
@@ -254,7 +254,7 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync(o => o.Name.Contains("3"));
                 }
 
@@ -263,7 +263,29 @@ namespace SlimRepository.EntityFrameworkCore.Test
             }
 
             [Fact]
-            [Trait("Category", "List")]
+            [Trait("Category", "ListAsync")]
+            public async void GivenListByMultipleCriteria_ItShouldReturnObjectsMeetingCriteriaAsync()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var searchingObject = seedData.First();
+                IList<TestObject> returnedList;
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    returnedList = await repository.ListAsync(o =>
+                        o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+                }
+
+                returnedList.Should()
+                    .ContainSingle(o => o.Id.Equals(searchingObject.Id) && o.Name.Equals(searchingObject.Name));
+            }
+
+            [Fact]
+            [Trait("Category", "ListAsync")]
             public async void GivenDatabaseContainsObjects_ItShouldReturnAllBySpecificationAsync()
             {
                 var options = new DbContextOptionsBuilder<TestContext>()
@@ -274,11 +296,41 @@ namespace SlimRepository.EntityFrameworkCore.Test
 
                 using (var context = new TestContext(options))
                 {
-                    var repository = new Repository<TestObject>(context);
+                    var repository = new AsyncRepository<TestObject>(context);
                     returnedList = await repository.ListAsync(new EmptySpecification<TestObject>(o => true));
                 }
 
                 returnedList.Should().BeEquivalentTo(seedData);
+            }
+
+            [Fact]
+            [Trait("Category", "ListAsync")]
+            public async void GivenObjectIsNotSaved_ItShouldNotGetSavedByOtherSavesAsync()
+            {
+                var options = new DbContextOptionsBuilder<TestContext>()
+                    .UseInMemoryDatabase(Helper.GetCallerName())
+                    .Options;
+                var seedData = options.EnsureSeeded();
+                var seedObject = seedData.First();
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    var list = await repository.ListAsync(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name = "ChangedName";
+                    var otherList = await repository.ListAsync(o => !o.Id.Equals(seedObject.Id));
+                    // Potentially saves all tracked objects
+                    await repository.EditAsync(otherList.First());
+                }
+
+                using (var context = new TestContext(options))
+                {
+                    var repository = new AsyncRepository<TestObject>(context);
+                    var list = await repository.ListAsync(o => o.Id.Equals(seedObject.Id));
+                    var testObject = list.First();
+                    testObject.Name.Should().NotBe("ChangedName");
+                }
             }
         }
     }
